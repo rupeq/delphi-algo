@@ -1,0 +1,131 @@
+program Project1;
+
+{$APPTYPE CONSOLE}
+
+{$R *.res}
+
+uses
+  SysUtils;
+
+
+var
+  input: textfile;
+  v, n, i, j, a, b: integer;
+  mas0: array of array  of integer;
+  matr_smez, matr_inz: array  of array  of integer;
+  spisok: array of string;
+  visit: array [1..6] of boolean;
+  s: string;
+
+{Ó·ıÓ‰ ‚ „ÎÛ·ËÌÛ}
+procedure DFS(v: integer);
+var t: integer;
+begin
+  write(v, ' ');
+  visit[v]:=true;
+  for t := 1 to n do
+    if (matr_smez[v-1, t-1]<>0) and (visit[t] = false) then
+     dfs(t);
+  writeln;
+end;
+
+begin
+ AssignFile(input, 'input.txt');
+ reset(input);
+ read(input, v);
+ read(input, n);
+ setlength(mas0, 7, 3);
+ setlength(matr_smez, v, v);
+ setlength(matr_inz, v, n);
+ setlength(spisok, v);
+ for i := 0 to n-1 do
+ begin
+    read(input, mas0[i,1-1]);
+    read(input, mas0[i,2-1]);
+    read(input, mas0[i,3-1]);
+ end;
+ for i := 0 to n-1 do
+ begin
+    write(mas0[i, 1-1], ' ');
+    write(mas0[i, 2-1], ' ');
+    write(mas0[i, 3-1], ' ');
+    writeln;
+   end;
+ writeln;
+ //------------------------------------------------------------------------
+ /////////////////«¿œŒÀÕ≈Õ»≈ Ã¿“–»÷€ —Ã≈∆ÕŒ—“» \\\\\\\\\\\\\\\\\\\\\\\\\\\\
+ //------------------------------------------------------------------------
+ for i := 0 to n-1 do
+ begin
+    matr_smez[mas0[i,0]-1, mas0[i,1]-1 ]:=mas0[i,2];
+    matr_smez[mas0[i,1]-1, mas0[i,0]-1 ]:=mas0[i,2];
+ end;
+    writeln('matrica smejnosti dannogo grapha:');
+ for i := 0 to v-1 do
+ begin
+  for j := 0 to v-1 do
+  begin
+    write (matr_smez[i,j], ' ' )
+  end;
+ writeln;
+ end;
+ writeln;
+ //------------------------------------------------------------------------
+ /////////////////«¿œŒÀÕ≈Õ»≈ Ã¿“–»÷€ »Õ÷»ƒ≈Õ“ÕŒ—“»\\\\\\\\\\\\\\\\\\\\\\\\\
+ //------------------------------------------------------------------------
+ for i := 0 to n-1 do
+ begin
+   matr_inz[mas0[i,0]-1, i]:= mas0[i, 2];
+   matr_inz[mas0[i,1]-1, i]:= mas0[i, 2];
+ end;
+ writeln('matrica incidentnosti dannogo grapha:');
+ for i := 0 to v-1 do
+ begin
+   for j := 0 to n-1 do
+   begin
+     write(matr_inz[i,j], ' ');
+   end;
+   writeln;
+ end;
+ writeln;
+
+ //------------------------------------------------------------------------
+ //////////////////// «¿œŒÀÕ≈Õ»≈ —œ»— ¿ —Ã≈∆ÕŒ—“» \\\\\\\\\\\\\\\\\\\\\\\\\
+ //------------------------------------------------------------------------
+  writeln('soisok smejnosti dannogo grapha:');
+  for i := 0 to n-1 do
+  begin
+      spisok[mas0[i, 0]-1]:=spisok[mas0[i, 0]-1] +(IntToStr(mas0[i, 1]) + '(' + IntToSTr(mas0[i,2]) + ')  ');
+      spisok[mas0[i, 1]-1]:=spisok[mas0[i, 1]-1]+(IntToStr(mas0[i, 0]) + '(' + IntToSTr(mas0[i,2]) + ')  ');
+  end;
+  for i := 0 to v-1 do
+  begin
+      write(i+1, ': ');
+      writeln(spisok[i]);
+  end;
+  readln;
+  writeln('yznac smejnost zadannih vershin');
+  writeln('vveedite vershini');
+  read(a, b);
+  writeln(matr_smez[a-1,b-1]<>0);
+  writeln('yznac vse rebra, zadannogo cherez vershini');
+  writeln('vveedite vershini');
+  readln(a, b);
+  writeln(matr_smez[a-1,b-1]);
+  writeln('yznac vse rebra, incidentnie zadannoy vershine ');
+  writeln('vveditte vershiny');
+  readln(a);
+  write(a, ': ');
+  for i := 0 to n-1 do
+    if matr_inz[a-1, i]<>0 then
+      write(i+1, ' ');
+  readln;
+  writeln('obhod grapha v glubiny');
+  writeln(' vvedite vershiny s kotoroi sledyet nachac');
+  readln(a);
+  writeln('putc obhoda grapha v glubiny:');
+  dfs(a);
+  writeln;
+  readln;
+  close(input);
+end.
