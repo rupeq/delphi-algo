@@ -1,4 +1,4 @@
-# algorithms_delphi
+# algorithms-delphi
 
 # Tree
 - Binary tree
